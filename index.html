@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>SUPER BINGO</title>
+
+<style>
+#bingoEffect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 100px;
+  font-weight: bold;
+  color: yellow;
+
+  background: rgba(0,0,0,0.75);
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: 0.3s;
+  z-index: 9999;
+}
+
+#bingoEffect.show {
+  opacity: 1;
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0% { transform: translate(0,0); }
+  25% { transform: translate(6px,-6px); }
+  50% { transform: translate(-6px,6px); }
+  75% { transform: translate(6px,6px); }
+  100% { transform: translate(0,0); }
+}
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f1220;
+  color:white;
+  text-align:center;
+}
+
+h1{margin:10px;}
+
+/* 점수판 */
+#scoreboard{
+  margin:10px;
+  font-size:18px;
+}
+
+#board{
+  display:grid;
+  grid-template-columns:repeat(5,80px);
+  gap:6px;
+  justify-content:center;
+  margin-top:10px;
+}
+
+.cell{
+  width:80px;
+  height:80px;
+  background:#222a55;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.red{background:#ff4d4d!important;}
+.blue{background:#4da6ff!important;}
+.green{background:#4dff88!important;}
+.yellow{background:#ffe44d!important;color:black;}
+
+/* 패널 */
+#panel{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#1c2140;
+  padding:15px;
+  border-radius:10px;
+  display:none;
+  width:320px;
+}
+
+button{
+  margin:5px;
+  padding:8px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+/* 미니게임 공개창 */
+#miniBox{
+  margin:10px 0;
+  padding:10px;
+  background:#0f1220;
+  border-radius:8px;
+  display:none;
+}
+</style>
+</head>
+
+<body>
+<div id="bingoEffect">BINGO!</div>
+
+<h1>🎮 SUPER BINGO</h1>
+
+<div id="scoreboard">
+  🔴 레드: <span id="red">0</span> |
+  🔵 블루: <span id="blue">0</span> |
+  🟢 그린: <span id="green">0</span> |
+  🟡 옐로우: <span id="yellow">0</span>
+</div>
+
+<div id="board"></div>
+
+<!-- 사회자 패널 -->
+<div id="panel">
+  <div id="cellInfo"></div>
+
+  <div id="miniBox">
+    🎯 미니게임: <span id="miniText"></span>
+  </div>
+
+  <button onclick="showMiniGame()">미니게임 공개</button>
+
+  <hr>
+
+  <button onclick="setTeam('red')">레드</button>
+  <button onclick="setTeam('blue')">블루</button>
+  <button onclick="setTeam('green')">그린</button>
+  <button onclick="setTeam('yellow')">옐로우</button>
+  <button onclick="closePanel()">닫기</button>
+</div>
+
+<script>
+function showBingoEffect(team){
+  const el = document.getElementById("bingoEffect");
+
+  el.innerText = "BINGO! " + team.toUpperCase();
+
+  el.classList.add("show");
+
+  setTimeout(()=>{
+    el.classList.remove("show");
+  }, 1200);
+}
+const board=document.getElementById("board");
+const panel=document.getElementById("panel");
+
+let selectedCell=null;
+
+let scores={
+  red:0,
+  blue:0,
+  green:0,
+  yellow:0
+};
+
+/* 🔥 미니게임 (숨김) */
+let miniGames=[
+"플랭크","물병세우기","초성게임","OX퀴즈","몸으로말해요",
+"줄넘기","병뚜껑뒤집기","눈치게임","노래맞히기","제기차기",
+"릴레이","암기게임","스피드퀴즈","손게임","풍선터트리기",
+"랜덤","발게임","그림맞히기","몸개그","팀워크",
+"A","B","C","D","E"
+];
+
+let bingoDone=new Set();
+
+/* 생성 */
+for(let r=0;r<5;r++){
+  for(let c=0;c<5;c++){
+
+    const i=r*5+c;
+    const cell=document.createElement("div");
+    cell.className="cell";
+
+    cell.innerText=["A","B","C","D","E"][r]+(c+1);
+    cell.dataset.index=i;
+
+    cell.onclick=()=>openPanel(cell);
+
+    board.appendChild(cell);
+  }
+}
+
+/* 패널 열기 */
+function openPanel(cell){
+  selectedCell=cell;
+
+  document.getElementById("cellInfo").innerText=
+    "칸: "+cell.innerText;
+
+  document.getElementById("miniBox").style.display="none";
+
+  panel.style.display="block";
+}
+
+/* 🔥 미니게임 공개 */
+function showMiniGame(){
+  let i=selectedCell.dataset.index;
+
+  document.getElementById("miniText").innerText=
+    miniGames[i];
+
+  document.getElementById("miniBox").style.display="block";
+}
+
+/* 팀 선택 */
+function setTeam(team){
+
+  let cell=selectedCell;
+  let prev=cell.dataset.owner;
+
+  cell.dataset.owner=team;
+  cell.className="cell "+team;
+
+  if(prev && prev!==team){
+    scores[prev]-=1;
+  }
+
+  scores[team]+=1;
+
+  updateScore();
+  checkBingo();
+
+  closePanel();
+}
+
+/* 닫기 */
+function closePanel(){
+  panel.style.display="none";
+  selectedCell=null;
+}
+
+/* 점수 */
+function updateScore(){
+  red.innerText=scores.red;
+  blue.innerText=scores.blue;
+  green.innerText=scores.green;
+  yellow.innerText=scores.yellow;
+}
+
+/* owner */
+function owner(cell){
+  return cell.dataset.owner;
+}
+
+/* 🔥 빙고 (총 7점 구조) */
+function checkBingo(){
+
+  const cells=document.querySelectorAll(".cell");
+
+  let g=[];
+  for(let r=0;r<5;r++){
+    g[r]=[];
+    for(let c=0;c<5;c++){
+      g[r][c]=cells[r*5+c];
+    }
+  }
+
+  function win(team,key){
+
+    if(bingoDone.has(key)) return;
+    bingoDone.add(key);
+
+    /* 🔥 핵심: 총 7점 구조 */
+    scores[team]+=2; // 추가 보너스
+    updateScore();
+
+    showBingoEffect(team);
+  }
+
+  // 가로
+  for(let r=0;r<5;r++){
+    let t=owner(g[r][0]);
+    if(!t) continue;
+    if(g[r].every(x=>owner(x)===t)) win(t,"r"+r);
+  }
+
+  // 세로
+  for(let c=0;c<5;c++){
+    let t=owner(g[0][c]);
+    if(!t) continue;
+    if(g.every(r=>owner(r[c])===t)) win(t,"c"+c);
+  }
+
+  // 대각선
+  let t1=owner(g[0][0]);
+  if(t1 && [0,1,2,3,4].every(i=>owner(g[i][i])===t1)) win(t1,"d1");
+
+  let t2=owner(g[0][4]);
+  if(t2 && [0,1,2,3,4].every(i=>owner(g[i][4-i])===t2)) win(t2,"d2");
+}
+
+</script>
+
+</body>
+</html>
