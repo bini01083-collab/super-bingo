@@ -185,11 +185,14 @@ button{
 
   <hr>
 
-  <button onclick="setTeam('red')">레드</button>
-  <button onclick="setTeam('blue')">블루</button>
-  <button onclick="setTeam('green')">그린</button>
-  <button onclick="setTeam('yellow')">옐로우</button>
-  <button onclick="closePanel()">닫기</button>
+<button onclick="setTeam('red')">레드</button>
+<button onclick="setTeam('blue')">블루</button>
+<button onclick="setTeam('green')">그린</button>
+<button onclick="setTeam('yellow')">옐로우</button>
+
+<button onclick="clearCell()">빈칸</button>
+
+<button onclick="closePanel()">닫기</button>
 </div>
 </div>
 
@@ -281,6 +284,20 @@ function setTeam(team){
   closePanel();
 }
 
+function clearCell(){
+
+  if(!selectedCell) return;
+
+  selectedCell.removeAttribute("data-owner");
+
+  selectedCell.className="cell";
+
+  recalculateScore();
+
+  closePanel();
+}
+
+  
 /* 닫기 */
 function closePanel(){
   panel.style.display="none";
