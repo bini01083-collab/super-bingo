@@ -153,6 +153,24 @@ button{
     border-radius:10px;
 
     cursor:pointer;
+  
+    transition:all .2s;
+
+    box-shadow:0 4px 8px rgba(0,0,0,.4);
+  
+
+}
+  button:hover{
+
+    transform:scale(1.08);
+
+    filter:brightness(1.1);
+
+}
+
+button:active{
+
+    transform:scale(.95);
 
 }
   .teamButtons{
@@ -176,6 +194,53 @@ button{
     gap:10px;
 
     margin-top:15px;
+
+}
+  .redBtn{
+
+    background:linear-gradient(#ff6767,#d62424);
+
+    color:white;
+
+}
+
+.blueBtn{
+
+    background:linear-gradient(#69b8ff,#2d7fff);
+
+    color:white;
+
+}
+
+.greenBtn{
+
+    background:linear-gradient(#6df5a0,#28b85f);
+
+    color:white;
+
+}
+
+.yellowBtn{
+
+    background:linear-gradient(#fff176,#ffd93d);
+
+    color:black;
+
+}
+
+.clearBtn{
+
+    background:#666;
+
+    color:white;
+
+}
+
+.closeBtn{
+
+    background:#222;
+
+    color:white;
 
 }
 .redBtn{
@@ -437,11 +502,12 @@ let miniGames=[
 "5. 눈치게임","14. 5초 안에 말하기","3. 초성게임","8. 스쿼트","4. 팔씨름",
 "11. 줄세우기","13. 이어그리기","5. 눈치게임","9. 손바닥 치기","2. 물병 세우기",
 "1. 플랭크","15. 마마마자로 끝나는 말은","가위바위보","6. 파파라치","13. 이어그리기",
-"8. 스쿼트","2. 물병 세우기","14. 5초 안에 말하기","1. 플랭크","3. 초성게임",
+"8. 스쿼트","16. 엄지씨름","14. 5초 안에 말하기","1. 플랭크","3. 초성게임",
 "12. 컵쌓기","9. 손바닥 치기","6. 파파라치","10. 다리 찢기","7. 한발 서기"
 ];
 
-let bingoDone=new Set();
+
+  let previousBingo = new Set();
 
 /* 생성 */
 for(let r=0;r<5;r++){
@@ -502,13 +568,13 @@ function showMiniGame(){
 }
 
 /* 팀 선택 */
+/* 팀 선택 */
 function setTeam(team){
 
-  let cell=selectedCell;
-  let prev=cell.dataset.owner;
+  let cell = selectedCell;
 
-  cell.dataset.owner=team;
-  cell.className="cell "+team;
+  cell.dataset.owner = team;
+  cell.className = "cell " + team;
 
   recalculateScore();
 
@@ -553,8 +619,6 @@ function recalculateScore(){
     yellow:0
   };
 
-  // 기존 빙고 기록 삭제
-  bingoDone.clear();
 
   // 칸 개수 계산
   const cells=document.querySelectorAll(".cell");
@@ -585,50 +649,86 @@ function owner(cell){
 /* 🔥 빙고 (총 7점 구조) */
 function checkBingo(){
 
-  const cells=document.querySelectorAll(".cell");
+    const cells=document.querySelectorAll(".cell");
 
-  let g=[];
-  for(let r=0;r<5;r++){
-    g[r]=[];
-    for(let c=0;c<5;c++){
-      g[r][c]=cells[r*5+c];
+    let g=[];
+
+    for(let r=0;r<5;r++){
+
+        g[r]=[];
+
+        for(let c=0;c<5;c++){
+
+            g[r][c]=cells[r*5+c];
+
+        }
+
     }
-  }
 
-  function win(team,key){
+    // 이번에 완성된 빙고 저장
+    let currentBingo=new Set();
 
-    // 이미 이번 계산에서 처리한 빙고면 종료
-    if(bingoDone.has(key)) return;
+    function win(team,key){
 
-    bingoDone.add(key);
+        currentBingo.add(key);
 
-    // 빙고 보너스 +2점
-    scores[team]+=2;
+        // 이전에는 없었는데 이번에 새로 생긴 빙고
+        if(!previousBingo.has(key)){
 
-    // 빙고 효과
-    showBingoEffect(team);
-}
+            showBingoEffect(team);
 
-  // 가로
-  for(let r=0;r<5;r++){
-    let t=owner(g[r][0]);
-    if(!t) continue;
-    if(g[r].every(x=>owner(x)===t)) win(t,"r"+r);
-  }
+        }
 
-  // 세로
-  for(let c=0;c<5;c++){
-    let t=owner(g[0][c]);
-    if(!t) continue;
-    if(g.every(r=>owner(r[c])===t)) win(t,"c"+c);
-  }
+        scores[team]+=2;
 
-  // 대각선
-  let t1=owner(g[0][0]);
-  if(t1 && [0,1,2,3,4].every(i=>owner(g[i][i])===t1)) win(t1,"d1");
+    }
 
-  let t2=owner(g[0][4]);
-  if(t2 && [0,1,2,3,4].every(i=>owner(g[i][4-i])===t2)) win(t2,"d2");
+    // 가로
+    for(let r=0;r<5;r++){
+
+        let t=owner(g[r][0]);
+
+        if(t && g[r].every(x=>owner(x)===t)){
+
+            win(t,"r"+r);
+
+        }
+
+    }
+
+    // 세로
+    for(let c=0;c<5;c++){
+
+        let t=owner(g[0][c]);
+
+        if(t && g.every(row=>owner(row[c])===t)){
+
+            win(t,"c"+c);
+
+        }
+
+    }
+
+    // 대각선
+    let t1=owner(g[0][0]);
+
+    if(t1 && [0,1,2,3,4].every(i=>owner(g[i][i])===t1)){
+
+        win(t1,"d1");
+
+    }
+
+    let t2=owner(g[0][4]);
+
+    if(t2 && [0,1,2,3,4].every(i=>owner(g[i][4-i])===t2)){
+
+        win(t2,"d2");
+
+    }
+
+    // 이번 결과를 저장
+    previousBingo=currentBingo;
+
 }
 
 </script>
