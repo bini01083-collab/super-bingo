@@ -144,17 +144,123 @@ button{
 
 /* 미니게임 공개창 */
 #miniBox{
-  margin:10px 0;
-  padding:10px;
+
+  margin:20px 0;
+
+  padding:20px;
+
   background:#0f1220;
-  border-radius:8px;
+
+  border-radius:10px;
+
   display:none;
+
+  font-size:28px;
+
+  font-weight:bold;
+
+  color:#ffe44d;
+
+  text-align:center;
+
 }
+#miniEffect{
+
+  position:fixed;
+
+  top:0;
+  left:0;
+
+  width:100%;
+  height:100%;
+
+  background:rgba(0,0,0,0.85);
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  align-items:center;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:opacity .4s;
+
+  z-index:9998;
+
+}
+
+#miniEffect.show{
+
+  opacity:1;
+
+}
+
+#miniTitle{
+
+  font-size:60px;
+
+  color:white;
+
+  margin-bottom:20px;
+
+  font-weight:bold;
+
+  letter-spacing:3px;
+
+}
+
+#miniGameName{
+
+  font-size:90px;
+
+  font-weight:bold;
+
+  color:#ffe44d;
+
+  text-align:center;
+
+  text-shadow:
+      0 0 15px gold,
+      0 0 30px gold,
+      0 0 50px orange;
+
+  animation:pop .5s;
+
+}
+
+@keyframes pop{
+
+  0%{
+    transform:scale(.3);
+    opacity:0;
+  }
+
+  60%{
+    transform:scale(1.15);
+  }
+
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+}
+
+  
 </style>
 </head>
 
 <body>
 <div id="bingoEffect">BINGO!</div>
+  <div id="miniEffect">
+    <div id="miniTitle">🎯 미니게임</div>
+    <div id="miniGameName"></div>
+</div>
 
 <h1>🎮 SUPER BINGO</h1>
 
@@ -207,6 +313,21 @@ function showBingoEffect(team){
   setTimeout(()=>{
     el.classList.remove("show");
   }, 1200);
+}
+  function showMiniEffect(game){
+
+    const effect = document.getElementById("miniEffect");
+
+    document.getElementById("miniGameName").innerText = game;
+
+    effect.classList.add("show");
+
+    setTimeout(function(){
+
+        effect.classList.remove("show");
+
+    },2500);
+
 }
 const board=document.getElementById("board");
 const panel=document.getElementById("panel");
@@ -273,12 +394,20 @@ function openPanel(cell){
 
 /* 🔥 미니게임 공개 */
 function showMiniGame(){
-  let i=selectedCell.dataset.index;
 
-  document.getElementById("miniText").innerText=
-    miniGames[i];
+    if(!selectedCell) return;
 
-  document.getElementById("miniBox").style.display="block";
+    let i = selectedCell.dataset.index;
+
+    let game = miniGames[i];
+
+    // 오른쪽 패널에도 표시
+    document.getElementById("miniText").innerText = game;
+    document.getElementById("miniBox").style.display = "block";
+
+    // 화면 중앙에 크게 표시
+    showMiniEffect(game);
+
 }
 
 /* 팀 선택 */
