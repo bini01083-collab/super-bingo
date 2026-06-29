@@ -349,15 +349,17 @@ function checkBingo(){
 
   function win(team,key){
 
+    // 이미 이번 계산에서 처리한 빙고면 종료
     if(bingoDone.has(key)) return;
+
     bingoDone.add(key);
 
-    /* 🔥 핵심: 총 7점 구조 */
-    scores[team]+=2; // 추가 보너스
-    updateScore();
+    // 빙고 보너스 +2점
+    scores[team]+=2;
 
+    // 빙고 효과
     showBingoEffect(team);
-  }
+}
 
   // 가로
   for(let r=0;r<5;r++){
