@@ -120,14 +120,22 @@ button{
 
 <h1>🎮 SUPER BINGO</h1>
 
-<div id="scoreboard">
-  🔴 레드: <span id="red">0</span> |
-  🔵 블루: <span id="blue">0</span> |
-  🟢 그린: <span id="green">0</span> |
-  🟡 옐로우: <span id="yellow">0</span>
-</div>
+<div id="layout">
 
-<div id="board"></div>
+    <!-- 왼쪽 점수판 -->
+    <div id="scoreboard">
+
+        <div class="team">🔴 레드 : <span id="red">0</span></div>
+        <div class="team">🔵 블루 : <span id="blue">0</span></div>
+        <div class="team">🟢 그린 : <span id="green">0</span></div>
+        <div class="team">🟡 옐로우 : <span id="yellow">0</span></div>
+
+    </div>
+
+    <!-- 가운데 빙고판 -->
+    <div id="board"></div>
+
+</div>
 
 <!-- 사회자 패널 -->
 <div id="panel">
