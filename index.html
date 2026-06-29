@@ -361,6 +361,41 @@ button:active{
 
 }
 
+.historyButtons{
+
+    margin-top:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.undoMainBtn{
+
+    background:#5b7cff;
+
+    color:white;
+
+}
+
+.redoMainBtn{
+
+    background:#46b96a;
+
+    color:white;
+
+}
+
+.themeBtn{
+
+    background:#444;
+
+    color:white;
+
+}
   
 </style>
 </head>
@@ -384,6 +419,19 @@ button:active{
         <div class="team">🟢 그린 : <span id="green">0</span></div>
         <div class="team">🟡 옐로우 : <span id="yellow">0</span></div>
 
+
+      <hr>
+
+<div class="historyButtons">
+
+    <button class="undoMainBtn" onclick="undo()">◀ 이전</button>
+
+    <button class="redoMainBtn" onclick="redo()">▶ 다음</button>
+
+    <button class="themeBtn" onclick="toggleTheme()">🌙 배경</button>
+
+</div>
+      
     </div>
 
     <!-- 가운데 빙고판 -->
@@ -458,7 +506,8 @@ const board=document.getElementById("board");
 const panel=document.getElementById("panel");
 
 let selectedCell=null;
-let lastState = null;
+let history = [];
+let historyIndex = -1;
 
 let scores={
   red:0,
@@ -541,51 +590,96 @@ function showMiniGame(){
 /* 팀 선택 */
 function setTeam(team){
 
-  if(!selectedCell) return;
+    if(!selectedCell) return;
 
-  let cell = selectedCell;
-  
-  lastState = {
-    cell: cell,
-    owner: cell.dataset.owner || null
-};
+    let cell = selectedCell;
 
-  cell.dataset.owner = team;
-  cell.className = "cell " + team;
+    // 변경 전 상태 저장
+    history.splice(historyIndex + 1);
 
-  recalculateScore();
+    history.push({
+        cell: cell,
+        before: cell.dataset.owner || null,
+        after: team
+    });
 
-  closePanel();
+    historyIndex++;
+
+    // 실제 변경
+    cell.dataset.owner = team;
+    cell.className = "cell " + team;
+
+    recalculateScore();
+
+    closePanel();
+
 }
 
 function clearCell(){
 
-  if(!selectedCell) return;
-  
-  lastState = {
-    cell: selectedCell,
-    owner: selectedCell.dataset.owner || null
-};
+    if(!selectedCell) return;
 
-  selectedCell.removeAttribute("data-owner");
+    let cell = selectedCell;
 
-  selectedCell.className="cell";
+    history.splice(historyIndex + 1);
 
-  recalculateScore();
+    history.push({
+        cell: cell,
+        before: cell.dataset.owner || null,
+        after: null
+    });
 
-  closePanel();
+    historyIndex++;
+
+    cell.removeAttribute("data-owner");
+    cell.className = "cell";
+
+    recalculateScore();
+
+    closePanel();
+
 }
 
 function undo(){
 
-    if(!lastState) return;
+    if(historyIndex < 0) return;
 
-    let cell = lastState.cell;
+    let action = history[historyIndex];
 
-    if(lastState.owner){
+    let cell = action.cell;
 
-        cell.dataset.owner = lastState.owner;
-        cell.className = "cell " + lastState.owner;
+    if(action.before){
+
+        cell.dataset.owner = action.before;
+        cell.className = "cell " + action.before;
+
+    }else{
+
+        cell.removeAttribute("data-owner");
+        cell.className = "cell";
+
+    }
+
+    historyIndex--;
+
+    recalculateScore();
+
+}
+
+function redo(){
+
+    if(historyIndex + 1 >= history.length) return;
+
+    historyIndex++;
+
+    let action = history[historyIndex];
+
+    let cell = action.cell;
+
+    if(action.after){
+
+        cell.dataset.owner = action.after;
+        cell.className = "cell " + action.after;
 
     }else{
 
@@ -595,8 +689,6 @@ function undo(){
     }
 
     recalculateScore();
-
-    lastState = null;
 
 }
   
@@ -736,7 +828,22 @@ function checkBingo(){
     previousBingo=currentBingo;
 
 }
+function toggleTheme(){
 
+    if(document.body.style.background=="white"){
+
+        document.body.style.background="#0f1220";
+        document.body.style.color="white";
+
+    }else{
+
+        document.body.style.background="white";
+        document.body.style.color="black";
+
+    }
+
+}
+  
 </script>
 
 </body>
