@@ -55,15 +55,18 @@ h1{margin:10px;}
 /* 점수판 */
 #layout{
 
-    display:flex;
+    width:95%;
+    max-width:1600px;
 
-    justify-content:center;
+    margin:30px auto;
 
-    align-items:flex-start;
+    display:grid;
 
-    gap:40px;
+    grid-template-columns:240px 1fr 240px;
 
-    margin-top:20px;
+    column-gap:40px;
+
+    align-items:start;
 
 }
 
@@ -93,15 +96,15 @@ h1{margin:10px;}
 
 #board{
   display:grid;
-  grid-template-columns:repeat(5,80px);
+  grid-template-columns:repeat(5,90px);
   gap:6px;
   justify-content:center;
   align-self:flex-start;
 }
 
 .cell{
-  width:80px;
-  height:80px;
+  width:90px;
+  height:90px;
   background:#222a55;
   display:flex;
   align-items:center;
@@ -119,22 +122,16 @@ h1{margin:10px;}
 /* 패널 */
 #panel{
 
-  position:fixed;
-
-  top:120px;
-
-  right:30px;
-
-  left:auto;
-
-  bottom:auto;
-
-  transform:none;
   background:#1c2140;
+
   padding:15px;
+
   border-radius:10px;
+
+  width:220px;
+
   display:none;
-  width:320px;
+
 }
 
 button{
@@ -176,8 +173,6 @@ button{
     <!-- 가운데 빙고판 -->
     <div id="board"></div>
 
-</div>
-
 <!-- 사회자 패널 -->
 <div id="panel">
   <div id="cellInfo"></div>
@@ -195,6 +190,7 @@ button{
   <button onclick="setTeam('green')">그린</button>
   <button onclick="setTeam('yellow')">옐로우</button>
   <button onclick="closePanel()">닫기</button>
+</div>
 </div>
 
 <script>
