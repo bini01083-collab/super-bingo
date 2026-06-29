@@ -47,12 +47,11 @@
 
 body{
   margin:0;
-  -family:Arial;
+  font-family:Arial;
   background:#0f1220;
   color:white;
   text-align:center;
 }
-
 h1{margin:10px;}
 
 /* 점수판 */
@@ -83,7 +82,7 @@ h1{margin:10px;}
 
     border-radius:10px;
 
-    -size:20px;
+    font-size:20px;
 
 }
 
@@ -93,7 +92,7 @@ h1{margin:10px;}
 
     text-align:left;
 
-    -weight:bold;
+    font-weight:bold;
 
 }
 
@@ -243,47 +242,7 @@ button:active{
     color:white;
 
 }
-.redBtn{
 
-    background:#ff4d4d;
-    color:white;
-
-}
-
-.blueBtn{
-
-    background:#4da6ff;
-    color:white;
-
-}
-
-.greenBtn{
-
-    background:#4dff88;
-    color:black;
-
-}
-
-.yellowBtn{
-
-    background:#ffe44d;
-    color:black;
-
-}
-
-.clearBtn{
-
-    background:#666;
-    color:white;
-
-}
-
-.closeBtn{
-
-    background:#222;
-    color:white;
-
-}
   
 /* 미니게임 공개창 */
 #miniBox{
@@ -570,6 +529,8 @@ function showMiniGame(){
 /* 팀 선택 */
 /* 팀 선택 */
 function setTeam(team){
+
+  if(!selectedCell) return;
 
   let cell = selectedCell;
 
