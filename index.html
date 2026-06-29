@@ -16,9 +16,12 @@
   align-items: center;
   justify-content: center;
 
-  font-size: 100px;
-  font-weight: bold;
-  color: yellow;
+  font-size: 120px;
+  font-weight: 900;
+  color: white;
+  letter-spacing:8px;
+
+  text-shadow:4px 4px 10px black;
 
   background: rgba(0,0,0,0.75);
 
@@ -216,18 +219,18 @@ button{
 
 #miniGameName{
 
-  font-size:90px;
+  font-size:88px;
 
-  font-weight:bold;
+  font-weight:900;
 
-  color:#ffe44d;
+  color:white;
 
   text-align:center;
 
+  letter-spacing:3px;
+
   text-shadow:
-      0 0 15px gold,
-      0 0 30px gold,
-      0 0 50px orange;
+      3px 3px 6px rgba(0,0,0,.7);
 
   animation:pop .5s;
 
@@ -306,7 +309,7 @@ button{
 function showBingoEffect(team){
   const el = document.getElementById("bingoEffect");
 
-  el.innerText = "BINGO! " + team.toUpperCase();
+  el.innerHTML = "🏆<br>BINGO!<br>" + team.toUpperCase();
 
   el.classList.add("show");
 
