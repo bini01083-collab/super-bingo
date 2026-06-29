@@ -243,6 +243,14 @@ button:active{
 
 }
 
+.undoBtn{
+
+    background:#7b5cff;
+
+    color:white;
+
+}
+
   
 /* 미니게임 공개창 */
 #miniBox{
@@ -409,6 +417,8 @@ button:active{
 
 <div class="etcButtons">
 
+    <button class="undoBtn" onclick="undo()">↩️ 되돌리기</button>
+
     <button class="clearBtn" onclick="clearCell()">빈칸</button>
 
     <button class="closeBtn" onclick="closePanel()">닫기</button>
@@ -448,6 +458,7 @@ const board=document.getElementById("board");
 const panel=document.getElementById("panel");
 
 let selectedCell=null;
+let lastState = null;
 
 let scores={
   red:0,
@@ -533,6 +544,11 @@ function setTeam(team){
   if(!selectedCell) return;
 
   let cell = selectedCell;
+  
+  lastState = {
+    cell: cell,
+    owner: cell.dataset.owner || null
+};
 
   cell.dataset.owner = team;
   cell.className = "cell " + team;
@@ -545,6 +561,11 @@ function setTeam(team){
 function clearCell(){
 
   if(!selectedCell) return;
+  
+  lastState = {
+    cell: selectedCell,
+    owner: selectedCell.dataset.owner || null
+};
 
   selectedCell.removeAttribute("data-owner");
 
@@ -555,6 +576,30 @@ function clearCell(){
   closePanel();
 }
 
+function undo(){
+
+    if(!lastState) return;
+
+    let cell = lastState.cell;
+
+    if(lastState.owner){
+
+        cell.dataset.owner = lastState.owner;
+        cell.className = "cell " + lastState.owner;
+
+    }else{
+
+        cell.removeAttribute("data-owner");
+        cell.className = "cell";
+
+    }
+
+    recalculateScore();
+
+    lastState = null;
+
+}
+  
   
 /* 닫기 */
 function closePanel(){
