@@ -139,13 +139,87 @@ h1{margin:10px;}
 }
 
 button{
-  margin:5px;
-  padding:8px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
+
+    margin:5px;
+
+    padding:12px;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+}
+  .teamButtons{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:10px;
+
+    margin-top:10px;
+
 }
 
+.etcButtons{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    margin-top:15px;
+
+}
+.redBtn{
+
+    background:#ff4d4d;
+    color:white;
+
+}
+
+.blueBtn{
+
+    background:#4da6ff;
+    color:white;
+
+}
+
+.greenBtn{
+
+    background:#4dff88;
+    color:black;
+
+}
+
+.yellowBtn{
+
+    background:#ffe44d;
+    color:black;
+
+}
+
+.clearBtn{
+
+    background:#666;
+    color:white;
+
+}
+
+.closeBtn{
+
+    background:#222;
+    color:white;
+
+}
+  
 /* 미니게임 공개창 */
 #miniBox{
 
@@ -295,14 +369,27 @@ button{
 
   <hr>
 
-<button onclick="setTeam('red')">레드</button>
-<button onclick="setTeam('blue')">블루</button>
-<button onclick="setTeam('green')">그린</button>
-<button onclick="setTeam('yellow')">옐로우</button>
+<div class="teamButtons">
 
-<button onclick="clearCell()">빈칸</button>
+    <button class="redBtn" onclick="setTeam('red')">레드</button>
 
-<button onclick="closePanel()">닫기</button>
+    <button class="blueBtn" onclick="setTeam('blue')">블루</button>
+
+    <button class="greenBtn" onclick="setTeam('green')">그린</button>
+
+    <button class="yellowBtn" onclick="setTeam('yellow')">옐로우</button>
+
+</div>
+
+<hr>
+
+<div class="etcButtons">
+
+    <button class="clearBtn" onclick="clearCell()">빈칸</button>
+
+    <button class="closeBtn" onclick="closePanel()">닫기</button>
+
+</div>
 </div>
 </div>
 
