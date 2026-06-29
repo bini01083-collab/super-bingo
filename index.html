@@ -276,14 +276,7 @@ function setTeam(team){
   cell.dataset.owner=team;
   cell.className="cell "+team;
 
-  if(prev && prev!==team){
-    scores[prev]-=1;
-  }
-
-  scores[team]+=1;
-
-  updateScore();
-  checkBingo();
+  recalculateScore();
 
   closePanel();
 }
@@ -301,7 +294,41 @@ function updateScore(){
   green.innerText=scores.green;
   yellow.innerText=scores.yellow;
 }
+  
+function recalculateScore(){
 
+  // 점수 초기화
+  scores={
+    red:0,
+    blue:0,
+    green:0,
+    yellow:0
+  };
+
+  // 기존 빙고 기록 삭제
+  bingoDone.clear();
+
+  // 칸 개수 계산
+  const cells=document.querySelectorAll(".cell");
+
+  cells.forEach(cell=>{
+
+    let team=cell.dataset.owner;
+
+    if(team){
+      scores[team]++;
+    }
+
+  });
+
+  // 빙고 다시 검사
+  checkBingo();
+
+  // 화면 갱신
+  updateScore();
+
+}
+  
 /* owner */
 function owner(cell){
   return cell.dataset.owner;
