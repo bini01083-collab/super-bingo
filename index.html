@@ -250,10 +250,21 @@ for(let r=0;r<5;r++){
 
 /* 패널 열기 */
 function openPanel(cell){
+
   selectedCell=cell;
 
-  document.getElementById("cellInfo").innerText=
-    "칸: "+cell.innerText;
+  let owner = cell.dataset.owner;
+
+  let teamName = "없음";
+
+  if(owner=="red") teamName="🔴 레드";
+  if(owner=="blue") teamName="🔵 블루";
+  if(owner=="green") teamName="🟢 그린";
+  if(owner=="yellow") teamName="🟡 옐로우";
+
+  document.getElementById("cellInfo").innerHTML=
+      "<h2>"+cell.innerText+"</h2>" +
+      "<div style='font-size:20px;margin-top:10px;'>현재 팀 : <b>"+teamName+"</b></div>";
 
   document.getElementById("miniBox").style.display="none";
 
