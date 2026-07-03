@@ -428,6 +428,8 @@ button:active{
 
     <button class="redoMainBtn" onclick="redo()">▶ 다음</button>
 
+    <button class="clearBtn" onclick="newGame()">🗑️ 새 게임</button>
+
 
 </div>
       
@@ -823,6 +825,30 @@ function checkBingo(){
 
     // 이번 결과를 저장
     previousBingo=currentBingo;
+
+}
+  function saveGame(){
+
+    const data = {
+        owners: [],
+        history: [],
+        historyIndex: historyIndex,
+        previousBingo: [...previousBingo]
+    };
+
+    document.querySelectorAll(".cell").forEach(cell=>{
+        data.owners.push(cell.dataset.owner || null);
+    });
+
+    history.forEach(h=>{
+        data.history.push({
+            index: h.cell.dataset.index,
+            before: h.before,
+            after: h.after
+        });
+    });
+
+    localStorage.setItem("superBingoSave", JSON.stringify(data));
 
 }
 
