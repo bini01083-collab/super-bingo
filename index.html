@@ -428,7 +428,6 @@ button:active{
 
     <button class="redoMainBtn" onclick="redo()">▶ 다음</button>
 
-    <button class="themeBtn" onclick="toggleTheme()">🌙 배경</button>
 
 </div>
       
@@ -464,8 +463,6 @@ button:active{
 <hr>
 
 <div class="etcButtons">
-
-    <button class="undoBtn" onclick="undo()">↩️ 되돌리기</button>
 
     <button class="clearBtn" onclick="clearCell()">빈칸</button>
 
@@ -828,21 +825,7 @@ function checkBingo(){
     previousBingo=currentBingo;
 
 }
-function toggleTheme(){
 
-    if(document.body.style.background=="white"){
-
-        document.body.style.background="#0f1220";
-        document.body.style.color="white";
-
-    }else{
-
-        document.body.style.background="white";
-        document.body.style.color="black";
-
-    }
-
-}
   
 </script>
 
